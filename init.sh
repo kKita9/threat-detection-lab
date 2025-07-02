@@ -17,4 +17,14 @@ touch logs/ftp-lab/vsftpd.log
 
 chmod 666 ./logs/ssh-lab/*.log
 
+# dvwa logs
+mkdir -p logs/dvwa/apache2
+mkdir -p logs/dvwa/mysql
+touch logs/dvwa/apache2/access.log
+touch logs/dvwa/apache2/error.log
+touch logs/dvwa/mysql/error.log
+chmod 666 logs/dvwa/apache2/*.log
+chmod 666 logs/dvwa/mysql/*.log
+
+
 echo "Done. You can now run: docker compose up --build -d"
