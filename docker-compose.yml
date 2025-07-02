@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  ssh-lab:
+    build: environments/ssh-lab
+    container_name: ssh-lab
+    ports:
+      - "2222:22"  # Expose container port 22 on host port 2222
+    volumes:
+      - ./logs/ssh-lab/auth.log:/var/log/auth.log
+      - ./logs/ssh-lab/syslog:/var/log/syslog
+        #      - ./logs/ssh-lab:/var/log # Persist logs to host
+    restart: unless-stopped
+    tty: true
+
