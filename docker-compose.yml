@@ -9,7 +9,16 @@ services:
     volumes:
       - ./logs/ssh-lab/auth.log:/var/log/auth.log
       - ./logs/ssh-lab/syslog:/var/log/syslog
-        #      - ./logs/ssh-lab:/var/log # Persist logs to host
+    restart: unless-stopped
+    tty: true 
+  ftp-lab:
+    build: environments/ftp-lab
+    container_name: ftp-lab
+    ports:
+      - "2121:21"
+    volumes:
+      - ./logs/ftp-lab/vsftpd.log:/var/log/vsftpd.log
     restart: unless-stopped
     tty: true
+
 
