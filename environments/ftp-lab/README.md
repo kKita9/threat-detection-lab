@@ -26,13 +26,17 @@ The file vsftpd.conf defines:
 
 Start with Docker Compose:
 
+```
 docker compose up -d --build
+```
 
 ## Test
 
 Use any FTP client or command-line:
 
+```
 ftp 127.0.0.1 2121
+```
 
 Then log in using the credentials above. After login attempts or file activity, logs will appear in:
 
