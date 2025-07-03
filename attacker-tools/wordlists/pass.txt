@@ -1,0 +1,7 @@
+admin
+root
+1234
+password
+toor
+letmein
+ftp
