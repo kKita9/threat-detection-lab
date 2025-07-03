@@ -11,6 +11,9 @@ services:
       - ./logs/ssh-lab/syslog:/var/log/syslog
     restart: unless-stopped
     tty: true 
+    networks:
+      - labnet
+  
   ftp-lab:
     build: environments/ftp-lab
     container_name: ftp-lab
@@ -20,6 +23,9 @@ services:
       - ./logs/ftp-lab/vsftpd.log:/var/log/vsftpd.log
     restart: unless-stopped
     tty: true
+    networks: 
+      - labnet
+
   dvwa:
     image: vulnerables/web-dvwa
     container_name: dvwa
@@ -31,5 +37,10 @@ services:
       - ./logs/dvwa/mysql/error.log:/var/log/mysql/error.log
     restart: unless-stopped
     tty: true
+    networks: 
+      - labnet
 
+networks:
+  labnet:
+    driver: bridge
 
