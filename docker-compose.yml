@@ -40,6 +40,16 @@ services:
     networks: 
       - labnet
 
+  attacker:
+    build: 
+      context: . 
+      dockerfile: ./attacker-tools/Dockerfile
+    container_name: attacker
+    volumes:
+      - ./attacker-tools/wordlists/:/wordlists
+    networks:
+      - labnet
+
 networks:
   labnet:
     driver: bridge
