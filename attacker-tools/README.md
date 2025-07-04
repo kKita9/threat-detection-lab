@@ -51,24 +51,24 @@ python attacker-tools/runner.py --mode test --count 3
 
 You can customize the behavior of the random attack runner using the following parameters:
 
--mode – Defines the runner mode. Options:
+--mode – Defines the runner mode. Options:
   - test – randomly selects a given number of attacks without delay
   - continuous – executes attacks with random delays between each attack
   - filtered – allows filtering attacks by category and/or intensity
 
--count – Number of random attacks to execute (used with test or filtered mode)
+--count – Number of random attacks to execute (used with test or filtered mode)
 
--category – Filter attacks by category (e.g. brute_force, sql_injection) - check attack.yaml to more categories
+--category – Filter attacks by category (e.g. brute_force, sql_injection) - check attack.yaml to more categories
 
--intensity – Filter attacks by intensity (low, medium, high)
+--intensity – Filter attacks by intensity (low, medium, high)
 
--min-interval – Minimum wait time (in seconds) between attacks (used with continuous mode)
+--min-interval – Minimum wait time (in seconds) between attacks (used with continuous mode)
 
--max-interval – Maximum wait time (in seconds) between attacks (used with continuous mode)
+--max-interval – Maximum wait time (in seconds) between attacks (used with continuous mode)
 
--logfile – Name of the JSONL output file (default: attack_runner_details.jsonl)
+--logfile – Name of the JSONL output file (default: attack_runner_details.jsonl)
 
--yaml – Path to the YAML file defining the attacks (default: attacks.yaml)
+--yaml – Path to the YAML file defining the attacks (default: attacks.yaml)
 
 
 ### Run the scheduled attack launcher (locally)
