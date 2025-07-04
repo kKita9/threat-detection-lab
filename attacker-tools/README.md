@@ -1,9 +1,9 @@
 
-# 🧨 attacker-tools
+# attacker-tools
 
 This module provides scripts and configurations to simulate cyberattacks in a lab environment, primarily for testing SIEM systems.
 
-## 📦 Included Components
+##  Included Components
 
 - `Dockerfile` – Builds the attacker container based on Kali Linux. It includes several preinstalled tools used for attacks.
 - `runner.py` – Randomized attack runner with CLI options
@@ -12,7 +12,7 @@ This module provides scripts and configurations to simulate cyberattacks in a la
 - `schedule.yaml` – Scheduled execution timeline
 - `wordlists/` – Wordlists used for brute-force attacks
 
-## ⚙️ How to Use
+##  How to Use
 
 ###  Build and start the attacker container (from project root)
 
@@ -34,7 +34,7 @@ python attacker-tools/runner.py --mode test --count 3
 python attacker-tools/attack_launcher.py
 ```
 
-## 🧰 Tools Used in container
+## Tools Used in container
 
 - **nmap** – port scanning
 - **sqlmap** – SQL injection testing
@@ -44,7 +44,7 @@ python attacker-tools/attack_launcher.py
 
 All tools are preinstalled in the container via Kali Linux.
 
-## 📝 Logs
+## Logs
 
 All logs are stored in the `logs/attacks/` directory (relative to the project root).
 
@@ -52,6 +52,6 @@ All logs are stored in the `logs/attacks/` directory (relative to the project ro
 - `attack_runner.log` – log messages from the `runner.py` script
 - `attack.log` –  logs from `attack_launcher.py`
 
-## 🚨 Disclaimer
+## Disclaimer
 
 This setup is intended for testing in **controlled lab environments only**. Do not use it on live networks or external systems!
