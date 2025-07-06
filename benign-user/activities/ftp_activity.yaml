@@ -1,0 +1,9 @@
+- name: FTP login and quit
+  command: |
+    ftp -inv ftp-lab 21 <<EOF
+    user testuser test123
+    quit
+    EOF
+  target: ftp-lab
+  user: testuser
+  requires_session: false

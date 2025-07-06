@@ -1,0 +1,29 @@
+- name: Access homepage
+  command: curl -s -o /dev/null -w "%{http_code}" http://dvwa
+  target: dvwa
+  user: benign
+  requires_session: false
+
+- name: Attempt login with default credentials
+  command: curl -s -X POST -d "username=admin&password=password&Login=Login" http://dvwa/login.php -c /tmp/cookies.txt -b /tmp/cookies.txt -L -o /dev/null -w "%{http_code}"
+  target: dvwa
+  user: benign
+  requires_session: false
+
+- name: Access security page
+  command: curl -s http://dvwa/security.php -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"
+  target: dvwa
+  user: benign
+  requires_session: false
+
+- name: Submit XSS test
+  command: curl -s -X POST -d "txtName=<script>alert('xss')</script>&mtxMessage=hello&btnSign=Sign+Guestbook" http://dvwa/vulnerabilities/xss/ -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"
+  target: dvwa
+  user: benign
+  requires_session: false
+
+- name: Fetch vulnerable SQLi page
+  command: curl -s http://dvwa/vulnerabilities/sqli/ -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"
+  target: dvwa
+  user: benign
+  requires_session: false

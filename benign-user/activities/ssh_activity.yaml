@@ -1,0 +1,35 @@
+- name: SSH login
+  command: sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'echo "Logged in successfully"'
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: Check system uptime
+  command: sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'uptime'
+  target: ssh-lab
+  user: root
+  requires_session: true  
+
+- name: List files in home directory
+  command: sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'ls -la /root'
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: Create and write to a file
+  command: sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'touch /root/report.txt && echo "Daily report" > /root/report.txt'
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: Display current user
+  command: sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'whoami'
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: End session
+  command: exit
+  target: ssh-lab
+  user: root
+  requires_session: false
