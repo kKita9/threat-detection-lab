@@ -8,7 +8,7 @@ services:
       - "2222:22"  # Expose container port 22 on host port 2222
     volumes:
       - ./logs/ssh-lab/auth.log:/var/log/auth.log
-      - ./logs/ssh-lab/syslog:/var/log/syslog
+      # - ./logs/ssh-lab/syslog:/var/log/syslog
     restart: unless-stopped
     tty: true 
     networks:
@@ -47,6 +47,20 @@ services:
     container_name: attacker
     volumes:
       - ./attacker-tools/wordlists/:/wordlists
+    networks:
+      - labnet
+
+  benign-user:
+    build:
+      context: .
+      dockerfile: ./benign-user/Dockerfile
+    container_name: benign_user
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - ssh-lab
+      - ftp-lab
+      - dvwa
     networks:
       - labnet
 
