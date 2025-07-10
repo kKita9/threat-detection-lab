@@ -8,11 +8,23 @@ services:
       - "2222:22"  # Expose container port 22 on host port 2222
     volumes:
       - ./logs/ssh-lab/auth.log:/var/log/auth.log
-      # - ./logs/ssh-lab/syslog:/var/log/syslog
     restart: unless-stopped
     tty: true 
     networks:
       - labnet
+
+  suricata-ssh:
+    build: environments/suricata
+    container_name: suricata-ssh
+    depends_on:
+      - ssh-lab
+    network_mode: "container:ssh-lab"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./logs/suricata/ssh:/var/log/suricata
+    restart: unless-stopped
   
   ftp-lab:
     build: environments/ftp-lab
@@ -25,6 +37,19 @@ services:
     tty: true
     networks: 
       - labnet
+    
+  suricata-ftp:
+    build: environments/suricata
+    container_name: suricata-ftp
+    depends_on:
+      - ftp-lab
+    network_mode: "container:ftp-lab"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./logs/suricata/ftp:/var/log/suricata
+    restart: unless-stopped
 
   dvwa:
     image: vulnerables/web-dvwa
@@ -39,6 +64,19 @@ services:
     tty: true
     networks: 
       - labnet
+
+  suricata-dvwa:
+    build: environments/suricata
+    container_name: suricata-dvwa
+    depends_on:
+      - dvwa
+    network_mode: "container:dvwa"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./logs/suricata/dvwa:/var/log/suricata
+    restart: unless-stopped
 
   attacker:
     build: 
