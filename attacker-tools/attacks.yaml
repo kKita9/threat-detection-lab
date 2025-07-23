@@ -12,7 +12,7 @@ attacks:
   - name: "FTP brute force – login enumeration"
     category: "brute_force"
     intensity: "medium"
-    command: "hydra -L /wordlists/usernames.txt -p test ftp-lab ftp -s 21 -t 4"
+    command: "hydra -L /wordlists/users.txt -p test ftp-lab ftp -s 21 -t 4"
 
   - name: "Port scan – full range"
     category: "port_scanning"

