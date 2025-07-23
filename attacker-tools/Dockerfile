@@ -9,6 +9,19 @@ RUN apt update && apt install -y \
     hydra \
     hping3 \
     curl \
-    tzdata
+    git \
+    nikto \
+    xsser \
+    slowloris \
+    metasploit-framework \
+    medusa \
+    python3 \
+    python3-pip \
+    slowhttptest \
+    tzdata \
+ && apt clean
+
+ RUN git clone https://github.com/jseidl/GoldenEye /opt/goldeneye \
+ && git clone https://github.com/grafov/hulk /opt/hulk
 
 CMD [ "tail", "-f", "/dev/null" ]
