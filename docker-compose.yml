@@ -13,18 +13,18 @@ services:
     networks:
       - labnet
 
-  suricata-ssh:
-    build: environments/suricata
-    container_name: suricata-ssh
-    depends_on:
-      - ssh-lab
-    network_mode: "container:ssh-lab"
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    volumes:
-      - ./logs/suricata/ssh:/var/log/suricata
-    restart: unless-stopped
+    # suricata-ssh:
+    #   build: environments/suricata
+    #   container_name: suricata-ssh
+    #   depends_on:
+    #     - ssh-lab
+    #   network_mode: "container:ssh-lab"
+    #   cap_add:
+    #     - NET_ADMIN
+    #     - NET_RAW
+    #   volumes:
+    #     - ./logs/suricata/ssh:/var/log/suricata
+    #   restart: unless-stopped
   
   ftp-lab:
     build: environments/ftp-lab
@@ -38,18 +38,18 @@ services:
     networks: 
       - labnet
     
-  suricata-ftp:
-    build: environments/suricata
-    container_name: suricata-ftp
-    depends_on:
-      - ftp-lab
-    network_mode: "container:ftp-lab"
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    volumes:
-      - ./logs/suricata/ftp:/var/log/suricata
-    restart: unless-stopped
+  # suricata-ftp:
+  #   build: environments/suricata
+  #   container_name: suricata-ftp
+  #   depends_on:
+  #     - ftp-lab
+  #   network_mode: "container:ftp-lab"
+  #   cap_add:
+  #     - NET_ADMIN
+  #     - NET_RAW
+  #   volumes:
+  #     - ./logs/suricata/ftp:/var/log/suricata
+  #   restart: unless-stopped
 
   dvwa:
     image: vulnerables/web-dvwa
@@ -65,18 +65,22 @@ services:
     networks: 
       - labnet
 
-  suricata-dvwa:
+  suricata:
     build: environments/suricata
-    container_name: suricata-dvwa
+    container_name: suricata
     depends_on:
+      - ssh-lab
+      - ftp-lab
       - dvwa
-    network_mode: "container:dvwa"
     cap_add:
       - NET_ADMIN
       - NET_RAW
     volumes:
-      - ./logs/suricata/dvwa:/var/log/suricata
+      - ./environments/suricata/config/suricata.yaml:/etc/suricata/suricata.yaml
+      - ./logs/suricata/victim:/var/log/suricata
     restart: unless-stopped
+    networks:
+      - labnet
 
   attacker:
     build: 

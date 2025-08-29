@@ -28,6 +28,7 @@ chmod 666 "$LOG_ROOT/dvwa/mysql/"*.log
 mkdir -p "$LOG_ROOT/suricata/ssh"
 mkdir -p "$LOG_ROOT/suricata/ftp"
 mkdir -p "$LOG_ROOT/suricata/dvwa"
+mkdir -p "$LOG_ROOT/suricata/victim"
 
 # Attacker logs
 mkdir -p "$LOG_ROOT/attacks"
