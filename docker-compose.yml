@@ -23,6 +23,7 @@ services:
       - NET_ADMIN
       - NET_RAW
     volumes:
+      - ./environments/suricata/config/suricata.yaml:/etc/suricata/suricata.yaml
       - ./logs/suricata/ssh:/var/log/suricata
     restart: unless-stopped
   
@@ -48,6 +49,7 @@ services:
       - NET_ADMIN
       - NET_RAW
     volumes:
+      - ./environments/suricata/config/suricata.yaml:/etc/suricata/suricata.yaml
       - ./logs/suricata/ftp:/var/log/suricata
     restart: unless-stopped
 
@@ -75,6 +77,7 @@ services:
       - NET_ADMIN
       - NET_RAW
     volumes:
+      - ./environments/suricata/config/suricata.yaml:/etc/suricata/suricata.yaml
       - ./logs/suricata/dvwa:/var/log/suricata
     restart: unless-stopped
 
