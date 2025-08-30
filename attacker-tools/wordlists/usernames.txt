@@ -1,0 +1,14 @@
+admin
+root
+user
+test
+testuser
+ftpuser
+john
+kali
+guest
+dev
+operator
+security
+manager
+backup
