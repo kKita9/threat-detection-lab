@@ -5,7 +5,7 @@ services:
     build: environments/ssh-lab
     container_name: ssh-lab
     ports:
-      - "2222:22"  # Expose container port 22 on host port 2222
+      - "127.0.0.1:2222:22"  # Expose container port 22 on host port 2222
     volumes:
       - ./logs/ssh-lab/auth.log:/var/log/auth.log
     restart: unless-stopped
@@ -31,7 +31,7 @@ services:
     build: environments/ftp-lab
     container_name: ftp-lab
     ports:
-      - "2121:21"
+      - "127.0.0.1:2121:21"
     volumes:
       - ./logs/ftp-lab/vsftpd.log:/var/log/vsftpd.log
     restart: unless-stopped
@@ -57,7 +57,7 @@ services:
     image: vulnerables/web-dvwa
     container_name: dvwa
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     volumes:
       - ./logs/dvwa/apache2/access.log:/var/log/apache2/access.log
       - ./logs/dvwa/apache2/error.log:/var/log/apache2/error.log
