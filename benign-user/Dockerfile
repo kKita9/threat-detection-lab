@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY benign-user/activity_generator.py ./
 COPY benign-user/test_all_commands.py ./
+COPY benign-user/example_files/upload.txt ./
 COPY common/ ./common/
 
 RUN apt-get update && \

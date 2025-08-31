@@ -16,6 +16,8 @@ COPY vsftpd.conf /etc/vsftpd.conf
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
+COPY example_files/readme.txt /home/testuser/readme.txt
+
 EXPOSE 21
 
 CMD ["/start.sh"]
