@@ -7,3 +7,78 @@
   target: ftp-lab
   user: testuser
   requires_session: false
+
+- name: FTP login and quit
+  command: |
+    ftp -inv ftp-lab 21 <<EOF
+    user testuser test123
+    quit
+    EOF
+  target: ftp-lab
+  user: testuser
+  requires_session: false
+
+- name: FTP list files
+  command: |
+    ftp -inv ftp-lab 21 <<EOF
+    user testuser test123
+    ls
+    quit
+    EOF
+  target: ftp-lab
+  user: testuser
+  requires_session: false
+
+- name: FTP download file
+  command: |
+    ftp -inv ftp-lab 21 <<EOF
+    user testuser test123
+    get readme.txt
+    quit
+    EOF
+  target: ftp-lab
+  user: testuser
+  requires_session: false
+
+- name: FTP upload file
+  command: |
+    ftp -inv ftp-lab 21 <<EOF
+    user testuser test123
+    put upload.txt
+    quit
+    EOF
+  target: ftp-lab
+  user: testuser
+  requires_session: false
+
+- name: FTP change directory
+  command: |
+    ftp -inv ftp-lab 21 <<EOF
+    user testuser test123
+    cd files
+    quit
+    EOF
+  target: ftp-lab
+  user: testuser
+  requires_session: false
+
+- name: FTP show current directory
+  command: |
+    ftp -inv ftp-lab 21 <<EOF
+    user testuser test123
+    pwd
+    quit
+    EOF
+  target: ftp-lab
+  user: testuser
+  requires_session: false
+
+- name: FTP login failed
+  command: |
+    ftp -inv ftp-lab 21 <<EOF
+    user wronguser wrongpass
+    quit
+    EOF
+  target: ftp-lab
+  user: wronguser
+  requires_session: false
