@@ -24,6 +24,9 @@ RUN sed -i 's/^#module(load="imklog")/module(load="imklog")/' /etc/rsyslog.conf 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
+# Install additional tools for testing and interaction
+RUN apt update && apt install -y curl wget iputils-ping dnsutils
+
 EXPOSE 22
 
 CMD ["/start.sh"]
