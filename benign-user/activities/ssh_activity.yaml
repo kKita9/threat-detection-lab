@@ -33,3 +33,111 @@
   target: ssh-lab
   user: root
   requires_session: false
+
+- name: View disk usage
+  command: "sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'df -h'"
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: List running processes
+  command: "sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'ps aux'"
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: Display hostname
+  command: "sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'hostname'"
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: View contents of report file
+  command: "sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'cat /root/report.txt'"
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: Append to existing log file
+  command: "sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'echo \"health check ok\" >> /root/report.txt'"
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: Download file with wget
+  command: "sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'wget -q http://dvwa -O /dev/null'"
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: Send HTTP request with curl from SSH
+  command: "sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'curl -s http://dvwa > /dev/null'"
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: Ping DVWA host
+  command: "sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'ping -c 2 dvwa'"
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: DNS query via nslookup
+  command: "sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'nslookup dvwa'"
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: Download file with curl to tmp
+  command: "sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'curl -s http://dvwa > /tmp/test.html'"
+  target: ssh-lab
+  user: root
+  requires_session: true
+
+- name: SSH login with wrong password
+  command: "sshpass -p 'wrongpass' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'echo failed'"
+  target: ssh-lab
+  user: root
+  requires_session: false
+
+- name: SSH login as unknown user
+  command: "sshpass -p 'somepass' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 fakeuser@ssh-lab 'echo failed'"
+  target: ssh-lab
+  user: fakeuser
+  requires_session: false
+
+- name: SSH to closed port
+  command: "sshpass -p 'root123' ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 9999 root@ssh-lab 'echo failed'"
+  target: ssh-lab
+  user: root
+  requires_session: false
+
+- name: SSH login with invalid host
+  command: "sshpass -p 'root123' ssh -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@nonexistent 'echo failed'"
+  target: nonexistent
+  user: root
+  requires_session: false
+
+- name: SSH login as test
+  command: "sshpass -p 'test123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 test@ssh-lab 'whoami'"
+  target: ssh-lab
+  user: test
+  requires_session: true
+
+- name: SSH login as analyst (wrong password)
+  command: "sshpass -p 'wrongpass' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 analyst@ssh-lab 'uptime'"
+  target: ssh-lab
+  user: analyst
+  requires_session: false
+
+- name: SSH login as dev
+  command: "sshpass -p 'devpass' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 dev@ssh-lab 'ls /home/dev'"
+  target: ssh-lab
+  user: dev
+  requires_session: true
+
+- name: SSH login as fake_admin (nonexistent)
+  command: "sshpass -p 'admin123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 fake_admin@ssh-lab 'echo Hello'"
+  target: ssh-lab
+  user: fake_admin
+  requires_session: false
