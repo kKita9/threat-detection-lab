@@ -3,6 +3,7 @@ FROM python:3.11-slim
 WORKDIR /app
 
 COPY benign-user/activity_generator.py ./
+COPY benign-user/test_all_commands.py ./
 COPY common/ ./common/
 
 RUN apt-get update && \
