@@ -96,6 +96,8 @@ services:
       context: .
       dockerfile: ./benign-user/Dockerfile
     container_name: benign_user
+    env_file:
+      - ./benign-user/.env
     volumes:
       - ./logs:/app/logs
     depends_on:

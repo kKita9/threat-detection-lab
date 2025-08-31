@@ -7,20 +7,20 @@ import sys
 import socket
 import glob
 
-# Add parent folder to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from common.logger_utils import setup_logger, jsonl_result
+
+MIN_SLEEP = float(os.getenv("MIN_SLEEP", 1))
+MAX_SLEEP = float(os.getenv("MAX_SLEEP", 5))
+MIN_COMMANDS = int(os.getenv("MIN_COMMANDS", 1))
+MAX_COMMANDS = int(os.getenv("MAX_COMMANDS", 5))
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ACTIVITY_FOLDER = os.path.join(BASE_DIR, "activities")
 
-# Setup logger
 logger = setup_logger("benign_runner", "benign", "benign_runner.log")
+logger.info(f"Loaded ENV config: MIN_SLEEP={MIN_SLEEP}, MAX_SLEEP={MAX_SLEEP}, MIN_COMMANDS={MIN_COMMANDS}, MAX_COMMANDS={MAX_COMMANDS}")
 
-# Active connections tracking
-target_status = {}
-
-# Load all YAML activity files
 activity_files = glob.glob(os.path.join(ACTIVITY_FOLDER, "*_activity.yaml"))
 commands = []
 
@@ -39,68 +39,40 @@ if not commands:
     logger.error("No valid commands found in activity files.")
     sys.exit(1)
 
-# Main execution loop
 while True:
-    command_entry = random.choice(commands)
-    name = command_entry.get("name")
-    command = command_entry.get("command")
-    target = command_entry.get("target")
-    user = command_entry.get("user")
-    requires_session = command_entry.get("requires_session", True)
-    credentials = command_entry.get("credentials", {})
+    count = random.randint(MIN_COMMANDS, MAX_COMMANDS)
+    selected = random.choices(commands, k=count)
 
-    # Special case: exit
-    if command.strip() == "exit":
-        if target in target_status and target_status[target] == user:
-            logger.info(f"[{user}] disconnecting from {target}")
-            del target_status[target]
-        time.sleep(random.uniform(2, 5))
-        continue
+    for command_entry in selected:
+        command = command_entry.get("command")
+        user = command_entry.get("user", "unknown")
+        target = command_entry.get("target", "n/a")
 
-    # Auto-wrap SSH commands with sshpass if needed
-    if command.startswith("ssh ") and "sshpass" not in command:
-        password = credentials.get("password", "root123")
-        command = f"sshpass -p '{password}' {command}"
+        logger.info(f"[{user}] Executing: {command}")
+        try:
+            start_exec = time.time()
+            result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=15)
+            duration = time.time() - start_exec
 
-    # Session logic
-    if command.startswith("ssh") or command.startswith("ftp"):
-        if target_status.get(target) == user:
-            logger.info(f"[{user}] already connected to {target}, skipping login")
-            time.sleep(random.uniform(2, 5))
-            continue
-        else:
-            target_status[target] = user
-    elif requires_session:
-        if target and target in target_status and target_status[target] != user:
-            logger.info(f"[{user}] not logged into {target}, skipping '{command}'")
-            time.sleep(random.uniform(2, 5))
-            continue
+            output = result.stdout.strip()
+            error = result.stderr.strip()
 
-    logger.info(f"[{user}] Executing: {command}")
-    try:
-        start_exec = time.time()
-        result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=15)
-        duration = time.time() - start_exec
+            if result.returncode != 0:
+                logger.warning(f"[{user}] Command failed with return code {result.returncode}")
 
-        output = result.stdout.strip()
-        error = result.stderr.strip()
+            log_data = {
+                "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "user": user,
+                "target": target,
+                "command": command,
+                "return_code": result.returncode,
+                "duration": duration,
+                "stdout": output,
+                "stderr": error,
+            }
+            jsonl_result(log_data, "benign", "benign_runner_details.jsonl")
 
-        if result.returncode != 0:
-            logger.warning(f"[{user}] Command failed with return code {result.returncode}")
+        except Exception as e:
+            logger.error(f"[{user}] Error executing command: {e}")
 
-        log_data = {
-            "user": user,
-            "target": target,
-            "command": command,
-            "stdout": output,
-            "stderr": error,
-            "return_code": result.returncode,
-            "duration": duration,
-            "timestamp": time.time()
-        }
-        jsonl_result(log_data, "benign", "benign_runner_details.jsonl")
-
-    except Exception as e:
-        logger.error(f"[{user}] Error executing command: {e}")
-
-    time.sleep(random.uniform(3, 10))
+    time.sleep(random.uniform(MIN_SLEEP, MAX_SLEEP))
