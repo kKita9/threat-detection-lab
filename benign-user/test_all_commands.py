@@ -5,7 +5,7 @@ import glob
 from datetime import datetime
 
 ACTIVITY_DIR = "/app/activities"
-OUTPUT_FILE = "/app/test_output.log"
+OUTPUT_FILE = "/app/logs/test_output.log"
 
 def log(msg):
     with open(OUTPUT_FILE, "a") as f:
