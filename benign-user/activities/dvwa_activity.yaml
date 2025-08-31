@@ -4,26 +4,86 @@
   user: benign
   requires_session: false
 
-- name: Attempt login with default credentials
-  command: curl -s -X POST -d "username=admin&password=password&Login=Login" http://dvwa/login.php -c /tmp/cookies.txt -b /tmp/cookies.txt -L -o /dev/null -w "%{http_code}"
+- name: Set DVWA security to low
+  command: 'curl -s -X POST -d "security=low&seclev_submit=Submit" http://dvwa/security.php -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"'
   target: dvwa
-  user: benign
+  user: admin
+  requires_session: false
+
+- name: Login with admin
+  command: curl -s -X POST -d "username=admin&password=password&Login=Login" http://dvwa/login.php
+    -c /tmp/cookies.txt -b /tmp/cookies.txt -L -o /dev/null -w "%{http_code}"
+  target: dvwa
+  user: admin
   requires_session: false
 
 - name: Access security page
-  command: curl -s http://dvwa/security.php -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"
+  command: curl -s http://dvwa/security.php -b /tmp/cookies.txt -c /tmp/cookies.txt
+    -o /dev/null -w "%{http_code}"
   target: dvwa
-  user: benign
+  user: admin
   requires_session: false
 
-- name: Submit XSS test
-  command: curl -s -X POST -d "txtName=<script>alert('xss')</script>&mtxMessage=hello&btnSign=Sign+Guestbook" http://dvwa/vulnerabilities/xss/ -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"
+- name: Access CSRF page
+  command: curl -s http://dvwa/vulnerabilities/csrf/ -b /tmp/cookies.txt -c /tmp/cookies.txt
+    -o /dev/null -w "%{http_code}"
   target: dvwa
-  user: benign
+  user: admin
   requires_session: false
 
-- name: Fetch vulnerable SQLi page
-  command: curl -s http://dvwa/vulnerabilities/sqli/ -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"
+- name: Access File Upload page
+  command: curl -s http://dvwa/vulnerabilities/upload/ -b /tmp/cookies.txt -c /tmp/cookies.txt
+    -o /dev/null -w "%{http_code}"
   target: dvwa
-  user: benign
+  user: admin
+  requires_session: false
+
+- name: Access SQLi page
+  command: curl -s http://dvwa/vulnerabilities/sqli/ -b /tmp/cookies.txt -c /tmp/cookies.txt
+    -o /dev/null -w "%{http_code}"
+  target: dvwa
+  user: admin
+  requires_session: false
+
+- name: Login as guest
+  command: curl -s -X POST -d "username=guest&password=guest&Login=Login" http://dvwa/login.php
+    -c /tmp/cookies.txt -b /tmp/cookies.txt -L -o /dev/null -w "%{http_code}"
+  target: dvwa
+  user: guest
+  requires_session: false
+
+- name: View SQL Injection form
+  command: 'curl -s "http://dvwa/vulnerabilities/sqli/" -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"'
+  target: dvwa
+  user: admin
+  requires_session: false
+
+- name: Submit SQL Injection form (normal input)
+  command: 'curl -s -X POST -d "id=1&Submit=Submit" http://dvwa/vulnerabilities/sqli/ -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"'
+  target: dvwa
+  user: admin
+  requires_session: false
+
+- name: View XSS form
+  command: 'curl -s http://dvwa/vulnerabilities/xss/ -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"'
+  target: dvwa
+  user: admin
+  requires_session: false
+
+- name: Submit XSS form (normal comment)
+  command: 'curl -s -X POST -d "txtName=Anna&mtxMessage=Hello&btnSign=Sign+Guestbook" http://dvwa/vulnerabilities/xss/ -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"'
+  target: dvwa
+  user: admin
+  requires_session: false
+
+- name: Access command injection page
+  command: 'curl -s http://dvwa/vulnerabilities/exec/ -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"'
+  target: dvwa
+  user: admin
+  requires_session: false
+
+- name: Submit ping request (normal IP)
+  command: 'curl -s -X POST -d "ip=8.8.8.8&Submit=Submit" http://dvwa/vulnerabilities/exec/ -b /tmp/cookies.txt -c /tmp/cookies.txt -o /dev/null -w "%{http_code}"'
+  target: dvwa
+  user: admin
   requires_session: false
