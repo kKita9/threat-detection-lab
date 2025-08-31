@@ -100,6 +100,7 @@ services:
       - ./benign-user/.env
     volumes:
       - ./logs:/app/logs
+      - ./benign-user/activities:/app/activities
     depends_on:
       - ssh-lab
       - ftp-lab
