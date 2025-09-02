@@ -24,4 +24,6 @@ RUN apt update && apt install -y \
  RUN git clone https://github.com/jseidl/GoldenEye /opt/goldeneye \
  && git clone https://github.com/grafov/hulk /opt/hulk
 
+COPY attacker-tools/attack_loop.sh /opt/attack_loop.sh
+
 CMD [ "tail", "-f", "/dev/null" ]
